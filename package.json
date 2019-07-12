@@ -1,0 +1,9 @@
+{
+  "name": "mira-local",
+  "version": "0.1.0",
+  "description": "Mira's user interface.",
+  "main": "index.js",
+  "repository": "https://github.com/miradev/mira-local",
+  "author": "miradev",
+  "license": "Apache 2.0"
+}

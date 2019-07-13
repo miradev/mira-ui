@@ -1,7 +1,10 @@
 const { app, BrowserWindow } = require("electron")
+const path = require("path")
 
 // Global reference of the window object to avoid garbage collection
 let win = null
+
+const windowFile = path.join(__dirname, "widgets", "window.html")
 
 function createWindow() {
   win = new BrowserWindow({
@@ -9,10 +12,10 @@ function createWindow() {
       nodeIntegration: true,
     },
     fullscreen: true,
-    backgroundColor: "#000000",
+    backgroundColor: "#FFFFFF",
   })
+  win.loadFile(windowFile)
   win.setMenuBarVisibility(false)
-  win.loadFile("index.html")
   win.on("closed", () => {
     win = null
   })

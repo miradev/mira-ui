@@ -1,20 +1,18 @@
-const { app, BrowserWindow } = require("electron")
-const path = require("path")
+import { app, BrowserWindow } from "electron"
+import * as path from "path"
 
 // Global reference of the window object to avoid garbage collection
-let win = null
-
-const windowFile = path.join(__dirname, "widgets", "window.html")
+let win: Electron.BrowserWindow = null
 
 function createWindow() {
   win = new BrowserWindow({
+    backgroundColor: "#000000",
+    fullscreen: true,
     webPreferences: {
       nodeIntegration: true,
     },
-    fullscreen: true,
-    backgroundColor: "#FFFFFF",
   })
-  win.loadFile(windowFile)
+  win.loadFile(path.join(__dirname, "window.html"))
   win.setMenuBarVisibility(false)
   win.on("closed", () => {
     win = null

@@ -9,10 +9,11 @@ function createWindow() {
     backgroundColor: "#000000",
     fullscreen: true,
     webPreferences: {
-      nodeIntegration: true,
+      contextIsolation: false,
+      preload: path.join(app.getAppPath(), "preload.js"),
     },
   })
-  win.loadFile(path.join(__dirname, "window.html"))
+  win.loadFile(path.join(app.getAppPath(), "renderer", "index.html"))
   win.setMenuBarVisibility(false)
   win.on("closed", () => {
     win = null

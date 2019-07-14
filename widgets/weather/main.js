@@ -1,8 +1,11 @@
-function main() {
-  const rootNode = document.getElementById("app")
-  const p = document.createElement("p")
-  p.textContent = "weather"
-  rootNode.appendChild(p)
+const { Widget } = require("../widget.js")
+
+class Weather extends Widget {
+  run() {
+    const p = document.createElement("p")
+    p.textContent = "Weather"
+    this.root.appendChild(p)
+  }
 }
 
-module.exports = main
+module.exports = Weather

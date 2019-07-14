@@ -1,8 +1,11 @@
-function main() {
-  const rootNode = document.getElementById("app")
-  const p = document.createElement("p")
-  p.textContent = "Clock"
-  rootNode.appendChild(p)
+const { Widget } = require("../widget.js")
+
+class Clock extends Widget {
+  run() {
+    const p = document.createElement("p")
+    p.textContent = "Clock"
+    this.root.appendChild(p)
+  }
 }
 
-module.exports = main
+module.exports = Clock

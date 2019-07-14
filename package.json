@@ -23,6 +23,7 @@
   },
   "scripts": {
     "build": "gulp",
-    "start": "electron ./dist/main.js"
+    "start": "electron ./dist/main.js",
+    "package": "electron-packager ./dist/ mira-local --platform=linux"
   }
 }

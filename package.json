@@ -28,5 +28,6 @@
     "start": "electron ./dist/main.js",
     "package": "electron-packager ./dist/ mira-ui --platform=linux"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "eslintIgnore": ["/dist/*"]
 }

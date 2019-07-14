@@ -50,9 +50,9 @@ function createRootDiv(id: string): HTMLDivElement {
 }
 
 /**
- *
+ * Checks whether a given variable is a widget class declaration
  * @param clazz variable that holds class declaration
  */
-export function isWidgetSubclass(clazz: any) {
+export function isWidgetSubclass(clazz: any): boolean {
   return typeof clazz === "function" && /class .+ extends Widget/.test(clazz.toString())
 }

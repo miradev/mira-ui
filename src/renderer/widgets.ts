@@ -47,9 +47,17 @@ const wm: IWidgetManager = {
       const id = widgetInstance.id
       div.id = id
 
-      // Set up some local variables for widget instance (delegated constructor through this manager class)
-      widgetInstance.manifest = this.manifests.get(id)
-      widgetInstance.rootDiv = div
+      // [Delegated widget constructor] initialize some readonly local variables for widget instance
+      // e.g. div wrapper for the given widget instance, and its corresponding manifest file
+      Object.defineProperty(widgetInstance, "manifest", {
+        value: this.manifests.get(id),
+        writable: false,
+      })
+      Object.freeze(widgetInstance.manifest)
+      Object.defineProperty(widgetInstance, "rootDiv", {
+        value: div,
+        writable: false,
+      })
       document.body.appendChild(div)
 
       // Save widget instance to wm widgets map

@@ -2,7 +2,7 @@ import { app, BrowserWindow } from "electron"
 import * as path from "path"
 
 // Global reference of the window object to avoid garbage collection
-let win: Electron.BrowserWindow = null
+let win: Electron.BrowserWindow | null = null
 
 function createWindow() {
   win = new BrowserWindow({

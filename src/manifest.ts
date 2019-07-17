@@ -1,7 +1,7 @@
 /**
  * Interface representation of a manifest.json file
  */
-export interface IManifestJSON {
+export interface ManifestJSON {
   id: string
   name: string
   version: string

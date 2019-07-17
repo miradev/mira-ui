@@ -1,17 +1,15 @@
-import { IManifestJSON } from "../manifest"
+import { ManifestJSON } from "../manifest"
 
 /**
  * Publically exposed widget manager API, accessed by custom widgets through the "wm" global variable
  */
-interface IWidgetManager {
+interface WidgetManager {
   register(widgetInstance: any): void
 }
 
-// tslint:disable-next-line: prefer-const
-const wm: IWidgetManager = {
-    register(widgetInstance: any) {
-      // no-op
-    },
+const wm: WidgetManager = {
+    // tslint:disable: no-empty
+    register(widgetInstance: any) {},
   }
 
   // Private anonymous function that constructs a widget manager local to this script file,
@@ -19,11 +17,11 @@ const wm: IWidgetManager = {
 ;(() => {
   const win = window as any
 
-  class WidgetManager implements IWidgetManager {
+  class BaseWidgetManager implements WidgetManager {
     private readonly widgets: Map<string, any> = new Map<string, any>()
-    private readonly manifests: Map<string, IManifestJSON> = new Map<string, IManifestJSON>()
+    private readonly manifests: Map<string, ManifestJSON> = new Map<string, ManifestJSON>()
 
-    public load(manifest: IManifestJSON) {
+    public load(manifest: ManifestJSON) {
       this.manifests.set(manifest.id, manifest)
 
       // Register script
@@ -43,9 +41,8 @@ const wm: IWidgetManager = {
 
     public register(widgetInstance: any) {
       // Construct a div wrapper for the given widget instance
-      const div = document.createElement("div")
       const id = widgetInstance.id
-      div.id = id
+      const div = document.createRootDiv(id)
 
       // [Delegated widget constructor] initialize some readonly local variables for widget instance
       // e.g. div wrapper for the given widget instance, and its corresponding manifest file
@@ -58,7 +55,6 @@ const wm: IWidgetManager = {
         value: div,
         writable: false,
       })
-      document.body.appendChild(div)
 
       // Save widget instance to wm widgets map
       this.widgets.set(div.id, widgetInstance)
@@ -75,7 +71,7 @@ const wm: IWidgetManager = {
     }
   }
 
-  const widgetManager = new WidgetManager()
+  const widgetManager = new BaseWidgetManager()
   // expose public widget manager methods to the global "wm" object
   wm.register = widgetManager.register.bind(widgetManager)
 

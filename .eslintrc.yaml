@@ -3,12 +3,11 @@ env:
   es6: true
   commonjs: true
 extends:
-  - "eslint:recommended"
-  - plugin:import/errors
-  - plugin:import/warnings
+  - "plugin:@typescript-eslint/recommended"
 plugins:
-  - import
+  - @typescript-eslint
   - prettier
+  - prettier/@typescript-eslint
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly

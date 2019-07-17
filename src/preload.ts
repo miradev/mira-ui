@@ -1,40 +1,36 @@
+import * as AdmZip from "adm-zip"
 import { remote } from "electron"
 import * as fs from "fs"
 import * as path from "path"
-import { IManifestJSON } from "./manifest"
-import * as AdmZip from "adm-zip"
+import { ManifestJSON } from "./manifest"
 
-const doc = document as any
-const win = window as any
-
-doc.createRootDiv = (id: string): HTMLDivElement => {
-  const miraRoot = document.getElementById("mira")
+document.createRootDiv = (id: string): HTMLDivElement => {
   const root = document.createElement("div")
   root.id = id
-  miraRoot.appendChild(root)
+  document.body.appendChild(root)
   return root
 }
 
-win.pathJoin = path.join
+window.pathJoin = path.join
 
-win.srcDir = __dirname
+window.srcDir = __dirname
 
-win.widgetDir = path.join(__dirname, "widgets")
+window.widgetDir = path.join(__dirname, "widgets")
 
 /**
  * Reads a file as a string, which is parsed by JSON.parse into a manifest object
  * @param manifestFile filepath to read from
  */
-win.readManifest = (manifestFile: string): IManifestJSON => {
+window.readManifest = (manifestFile: string): ManifestJSON => {
   const file = fs.readFileSync(manifestFile, { encoding: "utf8" })
-  return JSON.parse(file) as IManifestJSON
+  return JSON.parse(file) as ManifestJSON
 }
 
 /**
  * Reads a directory for a list of folder names (not files)
  * @param directory The directory to read from
  */
-win.readFolders = (directory: string): string[] => {
+window.readFolders = (directory: string): string[] => {
   return fs
     .readdirSync(directory, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
@@ -58,6 +54,6 @@ readZips(zipDir)
   .map(filename => path.join(zipDir, filename))
   .forEach(filePath => {
     const zip = new AdmZip(filePath)
-    const manifest = JSON.parse(zip.readAsText("manifest.json", "utf8")) as IManifestJSON
-    zip.extractAllTo(path.join(win.widgetDir, manifest.id))
+    const manifest = JSON.parse(zip.readAsText("manifest.json", "utf8")) as ManifestJSON
+    zip.extractAllTo(path.join(window.widgetDir, manifest.id))
   })

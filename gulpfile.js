@@ -24,6 +24,10 @@ gulp.task("copy-html", () => {
   return gulp.src("src/renderer/index.html").pipe(gulp.dest(DIST_RENDERER))
 })
 
+gulp.task("copy-vue-runtime-script", () => {
+  return gulp.src("src/renderer/vue.runtime.min.js").pipe(gulp.dest(DIST_RENDERER))
+})
+
 gulp.task("tsc", () => {
   const tsResult = gulp
     .src("src/**/*.ts")
@@ -35,5 +39,5 @@ gulp.task("tsc", () => {
 
 gulp.task(
   "default",
-  gulp.series("clean", gulp.parallel("tsc", "copy-html", "copy-exports", "copy-css")),
+  gulp.series("clean", gulp.parallel("tsc", "copy-html", "copy-vue-runtime-script", "copy-exports", "copy-css")),
 )

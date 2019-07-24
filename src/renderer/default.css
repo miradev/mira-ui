@@ -1,13 +1,25 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans");
-
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 body,
 html {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
   margin: 0 0;
   padding: 0 0;
 }
 
 body {
-  color: #ffffff;
-  font-family: "Open Sans";
-  font-size: 32px;
+  margin: 0 auto;
+}
+
+body > * {
+  margin: 0 auto;
+}
+
+body > div {
+  width: max-content;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  padding: 0;
+  margin: 0;
 }

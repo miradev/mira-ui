@@ -1,14 +1,23 @@
 #!/bin/bash
 
-WIDGET_NAME=$1
-WIDGET_ZIP=$1
-WIDGET_ZIP+=".zip"
-
-echo $WIDGET_ZIP
-
 cd workspace
-zip -r $WIDGET_ZIP .
 
-cp $WIDGET_ZIP /Users/$USER/Library/Application\ Support/Electron/widgets
+for FILE in *; do
+    if [ -d "$FILE" ]; then
+        echo "$FILE"
 
+		WIDGET_NAME=$FILE
+		WIDGET_ZIP=$FILE
+		WIDGET_ZIP+=".zip"
+
+		cd $FILE
+        zip -r $WIDGET_ZIP .
+        cp $WIDGET_ZIP /Users/$USER/Library/Application\ Support/Electron/widgets
+		rm $WIDGET_ZIP        
+        cd ..
+    fi
+done
+
+cd /Users/$USER/Documents/mira-ui/workspace
 yarn build
+

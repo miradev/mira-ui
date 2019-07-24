@@ -2,12 +2,13 @@
 body,
 html {
   font-family: "Roboto", sans-serif;
-  font-size: 16px;
+  font-size: 40px;
   margin: 0 0;
   padding: 0 0;
 }
 
 body {
+  padding: 1rem;
   margin: 0 auto;
 }
 
@@ -17,6 +18,9 @@ body > * {
 
 body > div {
   width: max-content;
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 p, h1, h2, h3, h4, h5, h6 {

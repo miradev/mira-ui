@@ -3,6 +3,7 @@ import { remote } from "electron"
 import * as fs from "fs"
 import * as path from "path"
 import { ManifestJSON } from "./manifest"
+import rimraf = require("rimraf")
 
 document.createRootDiv = (id: string): HTMLDivElement => {
   const root = document.createElement("div")
@@ -49,6 +50,7 @@ function readZips(directory: string): string[] {
 }
 
 // Decompress widget zips
+rimraf.sync(window.widgetDir)
 const zipDir = path.join(remote.app.getPath("userData"), "widgets")
 readZips(zipDir)
   .map(filename => path.join(zipDir, filename))

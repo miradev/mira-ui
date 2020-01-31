@@ -8,12 +8,13 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/adm-zip": "^0.4.32",
+    "@types/node": "12.12.24",
     "@typescript-eslint/eslint-plugin": "^1.12.0",
     "@typescript-eslint/parser": "^1.12.0",
     "adm-zip": "^0.4.13",
     "del": "^5.0.0",
-    "electron": "^5.0.6",
-    "electron-packager": "^14.0.1",
+    "electron": "^7.1.11",
+    "electron-packager": "^14.2.0",
     "eslint": "^6.0.1",
     "eslint-plugin-prettier": "^3.1.0",
     "gulp": "^4.0.2",
@@ -29,7 +30,6 @@
     "start": "electron ./dist/main.js",
     "package": "electron-packager ./dist/ mira-ui --platform=linux"
   },
-  "dependencies": {},
   "eslintIgnore": [
     "/dist/*"
   ]

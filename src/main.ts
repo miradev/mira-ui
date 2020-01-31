@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron"
+import { app, BrowserWindow, globalShortcut } from "electron"
 import * as path from "path"
 
 // Global reference of the window object to avoid garbage collection
@@ -13,6 +13,12 @@ function createWindow() {
       preload: path.join(app.getAppPath(), "preload.js"),
     },
   })
+
+  globalShortcut.register("F5", () => {
+    app.relaunch()
+    app.quit()
+  })
+
   win.loadFile(path.join(app.getAppPath(), "renderer", "index.html"))
   win.setMenuBarVisibility(false)
   win.on("closed", () => {

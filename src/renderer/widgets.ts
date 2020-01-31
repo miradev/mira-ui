@@ -68,6 +68,8 @@ const wm: WidgetManager = {
       if (typeof widgetInstance.run === "function") {
         widgetInstance.run()
       }
+
+      console.log(`Widget ${widgetInstance.manifest.name} loaded.`)
     }
   }
 

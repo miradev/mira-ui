@@ -3,7 +3,11 @@ import { remote } from "electron"
 import * as fs from "fs"
 import * as path from "path"
 import { ManifestJSON } from "./manifest"
-import rimraf = require("rimraf")
+import * as rimraf from "rimraf"
+import { WidgetSettingsJSON } from "./widget-settings"
+
+const WIDGET_SETTINGS = "widget_settings.json"
+const MANIFEST = "manifest.json"
 
 document.createRootDiv = (id: string): HTMLDivElement => {
   const root = document.createElement("div")
@@ -25,6 +29,11 @@ window.widgetDir = path.join(__dirname, "widgets")
 window.readManifest = (manifestFile: string): ManifestJSON => {
   const file = fs.readFileSync(manifestFile, { encoding: "utf8" })
   return JSON.parse(file) as ManifestJSON
+}
+
+window.readWidgetSettings = (widgetSettingsFile: string): WidgetSettingsJSON => {
+  const file = fs.readFileSync(widgetSettingsFile, { encoding: "utf8" })
+  return JSON.parse(file)
 }
 
 /**
@@ -49,13 +58,28 @@ function readZips(directory: string): string[] {
     .map(entry => entry.name)
 }
 
-// Decompress widget zips
+/* The following code blocks below enables the widget loading and reloading for the application
+ * Widget .zip files and the widget_settings.json are located in the userData path for the electron app,
+ * and these are copied over to the local application's installation directory where the index.html resides
+ * and is served when the application is started up.
+ *
+ * Before each startup, this folder is cleared and the files are (re)copied over so that the widgets and
+ * settings are thoroughly refreshed.
+ */
+
+// Decompress widget zips from electron application's userData folder into local index.html directory
 rimraf.sync(window.widgetDir)
 const zipDir = path.join(remote.app.getPath("userData"), "widgets")
 readZips(zipDir)
   .map(filename => path.join(zipDir, filename))
   .forEach(filePath => {
     const zip = new AdmZip(filePath)
-    const manifest = JSON.parse(zip.readAsText("manifest.json", "utf8")) as ManifestJSON
+    const manifest = JSON.parse(zip.readAsText(MANIFEST, "utf8")) as ManifestJSON
     zip.extractAllTo(path.join(window.widgetDir, manifest.id))
   })
+
+// Copy over widget_settings.json
+const widgetSettingsFile = path.join(zipDir, WIDGET_SETTINGS)
+if (fs.existsSync(widgetSettingsFile)) {
+  fs.copyFileSync(widgetSettingsFile, path.join(window.widgetDir, WIDGET_SETTINGS))
+}

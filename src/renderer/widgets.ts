@@ -1,4 +1,8 @@
 import { ManifestJSON } from "../manifest"
+import { WidgetSettingsJSON, WidgetSetting } from "../widget-settings"
+
+const WIDGET_SETTINGS = "widget_settings.json"
+const MANIFEST = "manifest.json"
 
 /**
  * Publically exposed widget manager API, accessed by custom widgets through the "wm" global variable
@@ -15,11 +19,16 @@ const wm: WidgetManager = {
   // Private anonymous function that constructs a widget manager local to this script file,
   // which then has the public methods exposed through the "wm" global variable
 ;(() => {
-  const win = window as any
+  const win = window as Window
 
   class BaseWidgetManager implements WidgetManager {
+    private readonly settings: WidgetSettingsJSON
     private readonly widgets: Map<string, any> = new Map<string, any>()
     private readonly manifests: Map<string, ManifestJSON> = new Map<string, ManifestJSON>()
+
+    constructor(widgetSettings: WidgetSettingsJSON) {
+      this.settings = widgetSettings
+    }
 
     public load(manifest: ManifestJSON) {
       this.manifests.set(manifest.id, manifest)
@@ -70,10 +79,26 @@ const wm: WidgetManager = {
       }
 
       console.log(`Widget ${widgetInstance.manifest.name} loaded.`)
+
+      const settings = this.loadSetting(id)
+      if (settings) {
+        const el = document.getElementById(id)!
+        el.style.top = settings.y.toString() + "px"
+        el.style.left = settings.x.toString() + "px"
+      }
+    }
+
+    private loadSetting(widgetId: string): WidgetSetting | null {
+      if (this.settings.widgets[widgetId]) {
+        const widgetSetting: WidgetSetting = this.settings.widgets[widgetId]
+        return widgetSetting
+      }
+      return null
     }
   }
 
-  const widgetManager = new BaseWidgetManager()
+  const widgetSettings = win.readWidgetSettings(win.pathJoin(win.widgetDir, WIDGET_SETTINGS))
+  const widgetManager = new BaseWidgetManager(widgetSettings)
   // expose public widget manager methods to the global "wm" object
   wm.register = widgetManager.register.bind(widgetManager)
 
@@ -82,7 +107,7 @@ const wm: WidgetManager = {
   widgetFolders
     .map(folderName => win.pathJoin(win.widgetDir, folderName) as string)
     .forEach(folder => {
-      const manifest = win.readManifest(win.pathJoin(folder, "manifest.json"))
+      const manifest = win.readManifest(win.pathJoin(folder, MANIFEST))
       widgetManager.load(manifest)
     })
 })()

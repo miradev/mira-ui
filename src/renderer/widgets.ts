@@ -82,6 +82,7 @@ const wm: WidgetManager = {
 
       const settings = this.loadSetting(id)
       if (settings) {
+        console.log(`Loading custom widget settings for widget ${widgetInstance.manifest.name}`)
         const el = document.getElementById(id)!
         el.style.top = settings.y.toString() + "px"
         el.style.left = settings.x.toString() + "px"

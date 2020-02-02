@@ -31,7 +31,10 @@ window.readManifest = (manifestFile: string): ManifestJSON => {
   return JSON.parse(file) as ManifestJSON
 }
 
-window.readWidgetSettings = (widgetSettingsFile: string): WidgetSettingsJSON => {
+window.readWidgetSettings = (widgetSettingsFile: string): WidgetSettingsJSON | null => {
+  if (!fs.existsSync(widgetSettingsFile)) {
+    return null
+  }
   const file = fs.readFileSync(widgetSettingsFile, { encoding: "utf8" })
   return JSON.parse(file)
 }

@@ -11,6 +11,6 @@ declare global {
     pathJoin(...paths: string[]): string
     readManifest(manifestFile: string): ManifestJSON
     readFolders(directory: string): string[]
-    readWidgetSettings(widgetSettingsFile: string): WidgetSettingsJSON
+    readWidgetSettings(widgetSettingsFile: string): WidgetSettingsJSON | null
   }
 }

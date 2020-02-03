@@ -22,11 +22,11 @@ const wm: WidgetManager = {
   const win = window as Window
 
   class BaseWidgetManager implements WidgetManager {
-    private readonly settings: WidgetSettingsJSON
+    private readonly settings: WidgetSettingsJSON | null
     private readonly widgets: Map<string, any> = new Map<string, any>()
     private readonly manifests: Map<string, ManifestJSON> = new Map<string, ManifestJSON>()
 
-    constructor(widgetSettings: WidgetSettingsJSON) {
+    constructor(widgetSettings: WidgetSettingsJSON | null) {
       this.settings = widgetSettings
     }
 
@@ -90,7 +90,7 @@ const wm: WidgetManager = {
     }
 
     private loadSetting(widgetId: string): WidgetSetting | null {
-      if (this.settings.widgets[widgetId]) {
+      if (this.settings && this.settings.widgets[widgetId]) {
         const widgetSetting: WidgetSetting = this.settings.widgets[widgetId]
         return widgetSetting
       }

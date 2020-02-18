@@ -30,6 +30,7 @@ function createWindow() {
   win.loadFile(path.join(app.getAppPath(), "renderer", "index.html"))
   win.setMenuBarVisibility(false)
   win.on("closed", () => {
+    globalShortcut.unregisterAll()
     win = null
   })
 

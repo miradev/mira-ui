@@ -44,6 +44,10 @@ window.readWidgetSettings = (widgetSettingsFile: string): WidgetSettingsJSON | n
  * @param directory The directory to read from
  */
 window.readFolders = (directory: string): string[] => {
+  if (!fs.existsSync(directory)) {
+    console.debug(`Warning, directory ${directory} does not exist!`)
+    return []
+  }
   return fs
     .readdirSync(directory, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
@@ -55,6 +59,10 @@ window.readFolders = (directory: string): string[] => {
  * @param directory The directory to read from
  */
 function readZips(directory: string): string[] {
+  if (!fs.existsSync(directory)) {
+    console.debug(`Warning, directory ${directory} does not exist!`)
+    return []
+  }
   return fs
     .readdirSync(directory, { withFileTypes: true })
     .filter(entry => entry.isFile() && entry.name.endsWith(".zip"))

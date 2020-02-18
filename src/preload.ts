@@ -5,6 +5,7 @@ import * as path from "path"
 import { ManifestJSON } from "./manifest"
 import * as rimraf from "rimraf"
 import { WidgetSettingsJSON } from "./widget-settings"
+import { ipcRenderer } from "electron"
 
 const WIDGET_SETTINGS = "widget_settings.json"
 const MANIFEST = "manifest.json"
@@ -22,6 +23,8 @@ window.srcDir = __dirname
 
 window.widgetDir = path.join(__dirname, "widgets")
 
+window.ipcRenderer = ipcRenderer
+
 /**
  * Reads a file as a string, which is parsed by JSON.parse into a manifest object
  * @param manifestFile filepath to read from
@@ -33,6 +36,7 @@ window.readManifest = (manifestFile: string): ManifestJSON => {
 
 window.readWidgetSettings = (widgetSettingsFile: string): WidgetSettingsJSON | null => {
   if (!fs.existsSync(widgetSettingsFile)) {
+    console.log("Warning, widget settings file does not exist!", widgetSettingsFile)
     return null
   }
   const file = fs.readFileSync(widgetSettingsFile, { encoding: "utf8" })
@@ -45,7 +49,7 @@ window.readWidgetSettings = (widgetSettingsFile: string): WidgetSettingsJSON | n
  */
 window.readFolders = (directory: string): string[] => {
   if (!fs.existsSync(directory)) {
-    console.debug(`Warning, directory ${directory} does not exist!`)
+    console.log("Warning, directory does not exist!", directory)
     return []
   }
   return fs
@@ -60,7 +64,7 @@ window.readFolders = (directory: string): string[] => {
  */
 function readZips(directory: string): string[] {
   if (!fs.existsSync(directory)) {
-    console.debug(`Warning, directory ${directory} does not exist!`)
+    console.log("Warning, zip file does not exist!", directory)
     return []
   }
   return fs

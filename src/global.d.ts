@@ -1,5 +1,6 @@
 import { ManifestJSON } from "./manifest"
 import { WidgetSettingsJSON } from "./widget-settings";
+import { IpcRenderer } from "electron";
 
 declare global {
   interface Document {
@@ -8,6 +9,7 @@ declare global {
   interface Window {
     srcDir: string
     widgetDir: string
+    ipcRenderer: IpcRenderer
     pathJoin(...paths: string[]): string
     readManifest(manifestFile: string): ManifestJSON
     readFolders(directory: string): string[]

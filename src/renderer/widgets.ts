@@ -21,6 +21,22 @@ const wm: WidgetManager = {
 ;(() => {
   const win = window as Window
 
+  function sleepView() {
+    document.body.style.opacity = "0"
+  }
+
+  function wakeView() {
+    document.body.style.opacity = "1"
+  }
+
+  win.ipcRenderer.on("!sleep", () => {
+    sleepView()
+  })
+
+  win.ipcRenderer.on("!wake", () => {
+    wakeView()
+  })
+
   class BaseWidgetManager implements WidgetManager {
     private readonly settings: WidgetSettingsJSON | null
     private readonly widgets: Map<string, any> = new Map<string, any>()

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut } from "electron"
+import { app, BrowserWindow, globalShortcut, ipcMain } from "electron"
 import * as path from "path"
 
 // Global reference of the window object to avoid garbage collection
@@ -14,6 +14,14 @@ function createWindow() {
     },
   })
 
+  globalShortcut.register("F3", () => {
+    win?.webContents.send("!wake", true)
+  })
+
+  globalShortcut.register("F1", () => {
+    win?.webContents.send("!sleep", true)
+  })
+
   globalShortcut.register("F5", () => {
     app.relaunch()
     app.quit()
@@ -23,6 +31,10 @@ function createWindow() {
   win.setMenuBarVisibility(false)
   win.on("closed", () => {
     win = null
+  })
+
+  ipcMain.on("msg", (event, args) => {
+    console.log(event, args)
   })
 }
 

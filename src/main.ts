@@ -1,5 +1,8 @@
 import { app, BrowserWindow, globalShortcut, ipcMain } from "electron"
 import * as path from "path"
+import * as WebSocket from "ws"
+
+const ws = new WebSocket("wss://echo.websocket.org")
 
 // Global reference of the window object to avoid garbage collection
 let win: Electron.BrowserWindow | null = null
@@ -37,6 +40,18 @@ function createWindow() {
   ipcMain.on("msg", (event, args) => {
     console.log(event, args)
   })
+
+  ws.on("open", function open() {
+    ws.send("something")
+  })
+
+  ws.on("message", function incoming(data) {
+    console.log(data)
+  })
+
+  setInterval(() => {
+    ws.send("something")
+  }, 1000)
 }
 
 app.on("ready", createWindow)

@@ -5,7 +5,7 @@ enum EventType {
 
 interface WebsocketEvent {
   type: EventType
-  data: string
+  data: any
 }
 
 export { EventType, WebsocketEvent }

@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono");
+body,
+html {
+  font-family: "Roboto Mono", sans-serif;
+  font-size: 40px;
+  margin: 0 0;
+  padding: 0 0;
+  cursor: none;
+}
+
+body {
+  color: white;
+  padding: 1rem;
+  margin: 0 auto;
+  transition: opacity 1s ease-in-out;
+}
+
+body > * {
+  margin: 0 auto;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  padding: 0;
+  margin: 0;
+}
+
+.setup {
+  margin-top: 6rem;
+}
+
+.setup p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+#qrcode {
+  margin: 0 auto;
+  width: 256px;
+  height: 256px;
+  background: white;
+  padding: 2rem;
+}

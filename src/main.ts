@@ -1,6 +1,7 @@
 import { app, BrowserWindow, globalShortcut, ipcMain } from "electron"
 import * as path from "path"
 import * as WebSocket from "ws"
+import * as fs from "fs"
 import WebsocketHandler from "./ws"
 import { readConfig } from "./config"
 
@@ -14,6 +15,10 @@ const wsh = new WebsocketHandler(ws)
 
 // Global reference of the window object to avoid garbage collection
 let win: Electron.BrowserWindow | null = null
+
+function tokenExists(): boolean {
+  return fs.existsSync(path.join(miraDirectory, "token"))
+}
 
 function createWindow() {
   win = new BrowserWindow({
@@ -52,12 +57,36 @@ function createWindow() {
   wsh.initialize()
 }
 
-app.on("ready", createWindow)
+function createSetupWindow() {
+  win = new BrowserWindow({
+    backgroundColor: "#000000",
+    fullscreen: true,
+    webPreferences: {
+      contextIsolation: false,
+      preload: path.join(app.getAppPath(), "preload-setup.js"),
+    },
+  })
+
+  win.loadFile(path.join(app.getAppPath(), "renderer", "setup", "index.html"))
+  win.setMenuBarVisibility(false)
+}
+
+app.on("ready", () => {
+  if (!tokenExists()) {
+    createSetupWindow()
+  } else {
+    createWindow()
+  }
+})
 
 app.on("window-all-closed", () => app.quit())
 
 app.on("activate", () => {
   if (win === null) {
-    createWindow()
+    if (!tokenExists()) {
+      createSetupWindow()
+    } else {
+      createWindow()
+    }
   }
 })

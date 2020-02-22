@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src https:; img-src https: data:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+    />
+    <title>Mira UI</title>
+    <link rel="stylesheet" href="./default.css" />
+  </head>
+  <script src="./qrcode.min.js"></script>
+  <body>
+    <div class="container setup">
+      <p>To set up your Mira device, associate a user with your device.</p>
+      <p>1. Log in to WEBSITE LINK</p>
+      <p>2. Scan the below QR code to copy this device's ID into the registration page.</p>
+      <div id="qrcode"></div>
+      <p>Or manually enter this Device ID: <span id="did"></span></p>
+    </div>
+  </body>
+  <script src="./setup.js"></script>
+</html>

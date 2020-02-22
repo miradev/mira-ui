@@ -6,6 +6,7 @@ import { ManifestJSON } from "./manifest"
 import * as rimraf from "rimraf"
 import { WidgetSettingsJSON } from "./widget-settings"
 import { ipcRenderer } from "electron"
+import * as hwid from "./hwid"
 
 const WIDGET_SETTINGS = "widget_settings.json"
 const MANIFEST = "manifest.json"
@@ -24,6 +25,8 @@ window.srcDir = __dirname
 window.widgetDir = path.join(__dirname, "widgets")
 
 window.ipcRenderer = ipcRenderer
+
+window.hwid = hwid
 
 /**
  * Reads a file as a string, which is parsed by JSON.parse into a manifest object

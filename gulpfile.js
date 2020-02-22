@@ -7,6 +7,7 @@ const path = require("path")
 
 const DIST = "dist"
 const DIST_RENDERER = path.join(DIST, "renderer")
+const DIST_RENDERER_SETUP = path.join(DIST_RENDERER, "setup")
 
 gulp.task("clean", () => {
   return del("dist/**", { force: true })
@@ -24,12 +25,20 @@ gulp.task("copy-html", () => {
   return gulp.src("src/renderer/index.html").pipe(gulp.dest(DIST_RENDERER))
 })
 
-gulp.task("copy-vue-runtime-script", () => {
-  return gulp.src("src/renderer/vue.runtime.min.js").pipe(gulp.dest(DIST_RENDERER))
+gulp.task("copy-runtime-scripts", () => {
+  return gulp
+    .src(["src/renderer/vue.runtime.min.js", "src/renderer/axios.min.js"])
+    .pipe(gulp.dest(DIST_RENDERER))
 })
 
-gulp.task("copy-axios-runtime-script", () => {
-  return gulp.src("src/renderer/axios.min.js").pipe(gulp.dest(DIST_RENDERER))
+gulp.task("copy-setup", () => {
+  return gulp
+    .src([
+      "src/renderer/setup/default.css",
+      "src/renderer/setup/qrcode.min.js",
+      "src/renderer/setup/index.html",
+    ])
+    .pipe(gulp.dest(DIST_RENDERER_SETUP))
 })
 
 gulp.task("tsc", () => {
@@ -48,10 +57,10 @@ gulp.task(
     gulp.parallel(
       "tsc",
       "copy-html",
-      "copy-vue-runtime-script",
-      "copy-axios-runtime-script",
+      "copy-runtime-scripts",
       "copy-exports",
       "copy-css",
+      "copy-setup",
     ),
   ),
 )

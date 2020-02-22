@@ -15,8 +15,12 @@ export default class WebsocketHandler {
     })
 
     this.ws.on("message", (data: string) => {
-      const event: WebsocketEvent = JSON.parse(data)
-      this.handleMessage(event.type, event.data)
+      try {
+        const event: WebsocketEvent = JSON.parse(data)
+        this.handleMessage(event.type, event.data)
+      } catch (err) {
+        console.error(`Received an unkonwn payload from the server: ${data}`)
+      }
     })
   }
 

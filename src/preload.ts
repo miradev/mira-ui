@@ -74,7 +74,7 @@ function readZips(directory: string): string[] {
 }
 
 /* The following code blocks below enables the widget loading and reloading for the application
- * Widget .zip files and the widget_settings.json are located in the userData path for the electron app,
+ * Widget .zip files and the widget_settings.json are located in the $HOME/.mira/widgets path,
  * and these are copied over to the local application's installation directory where the index.html resides
  * and is served when the application is started up.
  *
@@ -82,11 +82,12 @@ function readZips(directory: string): string[] {
  * settings are thoroughly refreshed.
  */
 
-// Decompress widget zips from electron application's userData folder into local index.html directory
+// Decompress widget zips from $HOME directory's .mira folder: ~/.mira/widgets/
 rimraf.sync(window.widgetDir)
-const zipDir = path.join(remote.app.getPath("userData"), "widgets")
-readZips(zipDir)
-  .map(filename => path.join(zipDir, filename))
+const miraDir = path.join(remote.app.getPath("home"), ".mira")
+const widgetDir = path.join(miraDir, "widgets")
+readZips(widgetDir)
+  .map(filename => path.join(widgetDir, filename))
   .forEach(filePath => {
     const zip = new AdmZip(filePath)
     const manifest = JSON.parse(zip.readAsText(MANIFEST, "utf8")) as ManifestJSON
@@ -94,7 +95,7 @@ readZips(zipDir)
   })
 
 // Copy over widget_settings.json
-const widgetSettingsFile = path.join(zipDir, WIDGET_SETTINGS)
+const widgetSettingsFile = path.join(miraDir, WIDGET_SETTINGS)
 if (fs.existsSync(widgetSettingsFile)) {
   fs.copyFileSync(widgetSettingsFile, path.join(window.widgetDir, WIDGET_SETTINGS))
 }

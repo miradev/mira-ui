@@ -1,18 +1,22 @@
-import { remote } from "electron"
 import * as path from "path"
+import * as fs from "fs"
 
-export interface IConfig {
-  widgetDirectory: string
-  appDirectory: string
+export interface Config {
+  serverUrl: string
+  serverPort: string
 }
 
-/**
- * Configuration struct which holds information about the application's main directory,
- * as well as the widget directory in use.
- */
-const config: IConfig = {
-  appDirectory: remote.app.getAppPath(),
-  widgetDirectory: path.join(remote.app.getPath("userData"), "widgets"),
+const defaultConfig: Config = {
+  serverUrl: "192.168.0.35",
+  serverPort: "8000",
 }
 
-export default config
+export function readConfig(directory: string): Config {
+  const fileName = path.join(directory, "config.json")
+  if (fs.existsSync(fileName)) {
+    const file = fs.readFileSync(fileName, { encoding: "utf-8" })
+    const config: Config = JSON.parse(file)
+    return config
+  }
+  return defaultConfig
+}

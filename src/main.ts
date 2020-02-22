@@ -2,8 +2,14 @@ import { app, BrowserWindow, globalShortcut, ipcMain } from "electron"
 import * as path from "path"
 import * as WebSocket from "ws"
 import WebsocketHandler from "./ws"
+import { readConfig } from "./config"
 
-const ws = new WebSocket("ws://192.168.0.35:8000")
+// Load config
+const miraDirectory = path.join(app.getPath("home"), ".mira")
+const config = readConfig(miraDirectory)
+
+// Initialize websockets
+const ws = new WebSocket(`ws://${config.serverUrl}:${config.serverPort}`)
 const wsh = new WebsocketHandler(ws)
 
 // Global reference of the window object to avoid garbage collection

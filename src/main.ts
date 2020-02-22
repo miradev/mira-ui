@@ -1,6 +1,7 @@
 import { app, BrowserWindow, globalShortcut, ipcMain } from "electron"
 import * as path from "path"
 import * as WebSocket from "ws"
+import * as hwid from "./hwid"
 
 const ws = new WebSocket("wss://echo.websocket.org")
 
@@ -42,7 +43,7 @@ function createWindow() {
   })
 
   ws.on("open", function open() {
-    ws.send("something")
+    ws.send(hwid.mac)
   })
 
   ws.on("message", function incoming(data) {
@@ -50,7 +51,7 @@ function createWindow() {
   })
 
   setInterval(() => {
-    ws.send("something")
+    ws.send(hwid.serial)
   }, 1000)
 }
 

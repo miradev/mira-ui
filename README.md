@@ -94,4 +94,4 @@ module.exports = MyCustomWidget // default export MUST be a class definition tha
 
 ### Where to put widget `.zip` packages?
 
-Zipped widget packages are expected to be located in the application's default Electron `app.getPath("userData")` directory within a `widgets` folder. For Linux, this is `$XDG_CONFIG_HOME/mira-ui/widgets/` or `~/.config/mira-ui/widgets/`
+Zipped widget packages are expected to be located in a `widgets` folder under the `.mira` folder within the user's home directory. For linux, this is `~/.mira/widgets/` where `~` is `$HOME`.

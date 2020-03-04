@@ -20,7 +20,7 @@ export default class WebsocketHandler {
         const event: WebsocketEvent = JSON.parse(data)
         this.handleMessage(event.type, event.data)
       } catch (err) {
-        console.error(`Received an unkonwn payload from the server: ${data}`)
+        console.error(`Received an unknown payload from the server: ${data}`)
       }
     })
   }

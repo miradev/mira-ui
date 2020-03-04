@@ -12,7 +12,7 @@ export default class WebsocketHandler {
 
   public initialize() {
     this.ws.on("open", () => {
-      this.ws.send(JSON.stringify(this.createAuthEvent()))
+      this.send(EventType.AUTH, hwid)
     })
 
     this.ws.on("message", (data: string) => {
@@ -25,11 +25,12 @@ export default class WebsocketHandler {
     })
   }
 
-  private createAuthEvent(): WebsocketEvent {
-    return {
-      type: EventType.AUTH,
-      data: hwid,
+  private send(eventType: EventType, data: any) {
+    const event: WebsocketEvent = {
+      type: eventType,
+      data: data
     }
+    this.ws.send(JSON.stringify(event))
   }
 
   private handleMessage(type: EventType, data: any) {

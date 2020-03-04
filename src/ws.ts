@@ -1,5 +1,6 @@
 import * as WebSocket from "ws"
-import { EventType, WebsocketEvent } from "./ws-event"
+import type { WebsocketEvent } from "./ws-event"
+import { EventType } from "./ws-event"
 import * as hwid from "./hwid"
 
 export default class WebsocketHandler {

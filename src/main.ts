@@ -5,6 +5,8 @@ import WebsocketHandler from "./ws"
 import { readConfig, readToken, ServerConfig } from "./config"
 import { setInterval } from "timers"
 
+app.allowRendererProcessReuse = true
+
 // Load config
 const miraDirectory = path.join(app.getPath("home"), ".mira")
 const config: ServerConfig = readConfig(miraDirectory)
@@ -70,8 +72,9 @@ function createSetupWindow(): void {
   win.loadFile(path.join(app.getAppPath(), "renderer", "setup", "index.html"))
   win.setMenuBarVisibility(false)
 
-  setInterval(() => {
+  let timer = setInterval(() => {
     if (tokenExists()) {
+      clearInterval(timer)
       app.relaunch()
       app.quit()
     }

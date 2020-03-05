@@ -67,7 +67,7 @@ window.readFolders = (directory: string): string[] => {
  */
 function readZips(directory: string): string[] {
   if (!fs.existsSync(directory)) {
-    console.log("Warning, zip file does not exist!", directory)
+    console.log("Warning, widget zip files do not exist in directory!", directory)
     return []
   }
   return fs

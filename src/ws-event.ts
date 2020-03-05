@@ -1,4 +1,5 @@
 export enum EventType {
+  REGISTER,
   AUTH,
   UPDATE,
 }

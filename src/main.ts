@@ -3,15 +3,16 @@ import * as path from "path"
 import * as WebSocket from "ws"
 import * as fs from "fs"
 import WebsocketHandler from "./ws"
-import { readConfig } from "./config"
+import { readConfig, readToken } from "./config"
 
 // Load config
 const miraDirectory = path.join(app.getPath("home"), ".mira")
 const config = readConfig(miraDirectory)
+const token = readToken(miraDirectory)
 
 // Initialize websockets
 const ws = new WebSocket(`ws://${config.serverUrl}:${config.serverPort}`)
-const wsh = new WebsocketHandler(ws)
+const wsh = new WebsocketHandler(ws, token)
 
 // Global reference of the window object to avoid garbage collection
 let win: Electron.BrowserWindow | null = null

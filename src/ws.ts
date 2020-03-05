@@ -3,16 +3,25 @@ import type { WebsocketEvent } from "./ws-event"
 import { EventType } from "./ws-event"
 import * as hwid from "./hwid"
 
+const deviceId = hwid.mac + "-" + hwid.serial
+
 export default class WebsocketHandler {
   private ws: WebSocket
+  private token: string | null
 
-  constructor(ws: WebSocket) {
+  constructor(ws: WebSocket, token: string | null) {
     this.ws = ws
+    this.token = token
   }
 
   public initialize() {
     this.ws.on("open", () => {
-      this.send(EventType.AUTH, hwid)
+      // Send token if token exists, else send device hwid for registration
+      if (this.token !== null) {
+        this.send(EventType.AUTH, this.token)
+      } else {
+        this.send(EventType.REGISTER, deviceId)
+      }
     })
 
     this.ws.on("message", (data: string) => {
@@ -35,12 +44,16 @@ export default class WebsocketHandler {
 
   private handleMessage(type: EventType, data: any) {
     switch (type) {
+      case EventType.REGISTER:
+        return this.handleRegisterEvent(data)
       case EventType.AUTH:
         return this.handleAuthEvent(data)
       case EventType.UPDATE:
         return this.handleUpdateEvent(data)
     }
   }
+
+  private handleRegisterEvent(data: any) {}
 
   private handleAuthEvent(data: any) {}
 

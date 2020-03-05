@@ -20,3 +20,12 @@ export function readConfig(directory: string): Config {
   }
   return defaultConfig
 }
+
+export function readToken(directory: string): string | null {
+  const fileName = path.join(directory, "token")
+  if (fs.existsSync(fileName)) {
+    const file = fs.readFileSync(fileName, { encoding: "utf-8" })
+    return file
+  }
+  return null
+}

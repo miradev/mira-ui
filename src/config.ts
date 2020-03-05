@@ -1,21 +1,21 @@
 import * as path from "path"
 import * as fs from "fs"
 
-export interface Config {
+export interface ServerConfig {
   serverUrl: string
   serverPort: string
 }
 
-const defaultConfig: Config = {
+const defaultConfig: ServerConfig = {
   serverUrl: "192.168.0.35",
   serverPort: "8000",
 }
 
-export function readConfig(directory: string): Config {
+export function readConfig(directory: string): ServerConfig {
   const fileName = path.join(directory, "config.json")
   if (fs.existsSync(fileName)) {
     const file = fs.readFileSync(fileName, { encoding: "utf-8" })
-    const config: Config = JSON.parse(file)
+    const config: ServerConfig = JSON.parse(file)
     return config
   }
   return defaultConfig

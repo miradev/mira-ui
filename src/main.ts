@@ -1,18 +1,17 @@
 import { app, BrowserWindow, globalShortcut, ipcMain } from "electron"
 import * as path from "path"
-import * as WebSocket from "ws"
 import * as fs from "fs"
-import WebsocketHandler from "@/ws"
-import { readConfig, readToken } from "@/config"
+import WebsocketHandler from "./ws"
+import { readConfig, readToken, ServerConfig } from "./config"
+import { setInterval } from "timers"
 
 // Load config
 const miraDirectory = path.join(app.getPath("home"), ".mira")
-const config = readConfig(miraDirectory)
-const token = readToken(miraDirectory)
+const config: ServerConfig = readConfig(miraDirectory)
+const token: string | null = readToken(miraDirectory)
 
 // Initialize websockets
-const ws = new WebSocket(`ws://${config.serverUrl}:${config.serverPort}`)
-const wsh = new WebsocketHandler(ws, miraDirectory, token)
+const wsh = new WebsocketHandler(config, miraDirectory, token)
 
 // Global reference of the window object to avoid garbage collection
 let win: Electron.BrowserWindow | null = null
@@ -70,6 +69,13 @@ function createSetupWindow(): void {
 
   win.loadFile(path.join(app.getAppPath(), "renderer", "setup", "index.html"))
   win.setMenuBarVisibility(false)
+
+  setInterval(() => {
+    if (tokenExists()) {
+      app.relaunch()
+      app.quit()
+    }
+  }, 1000)
 }
 
 app.on("ready", () => {

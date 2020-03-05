@@ -1,6 +1,6 @@
 import type { ManifestJSON } from "./manifest"
 import type { WidgetSettingsJSON } from "./widget-settings"
-import type { Config } from "./config"
+import type { ServerConfig } from "./config"
 import { IpcRenderer } from "electron"
 
 declare global {
@@ -12,7 +12,7 @@ declare global {
     widgetDir: string
     ipcRenderer: IpcRenderer
     hwid: { mac: string; serial: string }
-    serverConfig: Config
+    serverConfig: ServerConfig
     pathJoin(...paths: string[]): string
     readManifest(manifestFile: string): ManifestJSON
     readFolders(directory: string): string[]

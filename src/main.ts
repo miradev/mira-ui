@@ -56,7 +56,11 @@ function createWindow(): void {
     console.log(event, args)
   })
 
-  wsh.initialize()
+  wsh.initialize(() => {
+    // On websocket "invalidated" close, restart app without token file
+    app.relaunch()
+    app.quit()
+  })
 }
 
 function createSetupWindow(): void {

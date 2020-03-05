@@ -1,6 +1,8 @@
 import * as path from "path"
 import * as fs from "fs"
 
+const TOKEN_FILENAME = "token"
+
 export interface ServerConfig {
   protocol: string
   serverUrl: string
@@ -26,7 +28,7 @@ export function readConfig(directory: string): ServerConfig {
 }
 
 export function readToken(directory: string): string | null {
-  const fileName = path.join(directory, "token")
+  const fileName = path.join(directory, TOKEN_FILENAME)
   if (fs.existsSync(fileName)) {
     const file = fs.readFileSync(fileName, { encoding: "utf-8" })
     if (file.length > 0) {
@@ -37,6 +39,13 @@ export function readToken(directory: string): string | null {
 }
 
 export function writeToken(directory: string, value: string): void {
-  const fileName = path.join(directory, "token")
+  const fileName = path.join(directory, TOKEN_FILENAME)
   fs.writeFileSync(fileName, value, { encoding: "utf-8" })
+}
+
+export function removeTokenIfExists(directory: string): void {
+  const fileName = path.join(directory, TOKEN_FILENAME)
+  if (fs.existsSync(fileName)) {
+    fs.unlinkSync(fileName)
+  }
 }

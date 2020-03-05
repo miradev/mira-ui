@@ -1,14 +1,14 @@
 import type { WebsocketEvent } from "./ws-event"
 import * as hwid from "./hwid"
 import * as WebSocket from "ws"
-import { writeToken, ServerConfig } from "./config"
+import { writeToken, ServerConfig, removeTokenIfExists } from "./config"
 import { EventType } from "./ws-event"
 
 const deviceId = hwid.mac + "-" + hwid.serial
 
 export default class WebsocketHandler {
   private serverConfig: ServerConfig
-  private ws: WebSocket
+  private ws!: WebSocket
   private miraDirectory: string
   private token: string | null
 
@@ -16,24 +16,26 @@ export default class WebsocketHandler {
     this.serverConfig = serverConfig
     this.miraDirectory = miraDirectory
     this.token = token
-    this.ws = this.newWebSocketConnection()
   }
 
   private newWebSocketConnection(): WebSocket {
     return new WebSocket(`ws://${this.serverConfig.serverUrl}:${this.serverConfig.serverPort}`)
   }
 
-  public initialize(): void {
+  public initialize(closeFunc: (() => void) | undefined = undefined): void {
+    this.ws = this.newWebSocketConnection()
+
     this.ws.on("error", (err: Error) => {
       console.log(err)
     })
 
-    this.ws.on("open", () => {
-      // Send token if token exists, else send device hwid for registration
-      if (this.token !== null) {
-        this.send(EventType.AUTH, { deviceId: deviceId, token: this.token })
-      } else {
-        this.send(EventType.REGISTER, { deviceId: deviceId })
+    this.ws.on("close", (code: number, reason: string) => {
+      if (code === 1008) {
+        // Delete token file if exists
+        removeTokenIfExists(this.miraDirectory)
+        if (closeFunc) {
+          closeFunc()
+        }
       }
     })
 
@@ -44,6 +46,15 @@ export default class WebsocketHandler {
         this.handleMessage(event.type, event.data)
       } catch (err) {
         console.error(`Received an unknown payload from the server: ${data}`)
+      }
+    })
+
+    this.ws.on("open", () => {
+      // Send token if token exists, else send device hwid for registration
+      if (this.token !== null) {
+        this.send(EventType.AUTH, { deviceId: deviceId, token: this.token })
+      } else {
+        this.send(EventType.REGISTER, { deviceId: deviceId })
       }
     })
   }

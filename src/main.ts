@@ -72,6 +72,8 @@ function createSetupWindow(): void {
   win.loadFile(path.join(app.getAppPath(), "renderer", "setup", "index.html"))
   win.setMenuBarVisibility(false)
 
+  wsh.initialize()
+
   let timer = setInterval(() => {
     if (tokenExists()) {
       clearInterval(timer)

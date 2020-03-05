@@ -31,9 +31,9 @@ export default class WebsocketHandler {
     this.ws.on("open", () => {
       // Send token if token exists, else send device hwid for registration
       if (this.token !== null) {
-        this.send(EventType.AUTH, this.token)
+        this.send(EventType.AUTH, { deviceId: deviceId, token: this.token })
       } else {
-        this.send(EventType.REGISTER, deviceId)
+        this.send(EventType.REGISTER, { deviceId: deviceId })
       }
     })
 
@@ -47,7 +47,7 @@ export default class WebsocketHandler {
     })
   }
 
-  private send(eventType: EventType, data: any): void {
+  private send(eventType: EventType, data: string | object): void {
     const event: WebsocketEvent = {
       type: eventType,
       data: data

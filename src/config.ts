@@ -18,7 +18,9 @@ export function readConfig(directory: string): ServerConfig {
   if (fs.existsSync(fileName)) {
     const file = fs.readFileSync(fileName, { encoding: "utf-8" })
     const config: ServerConfig = JSON.parse(file)
-    return config
+    if (config.protocol && config.serverUrl && config.serverPort) {
+      return config
+    }
   }
   return defaultConfig
 }

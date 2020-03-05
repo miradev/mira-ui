@@ -29,3 +29,8 @@ export function readToken(directory: string): string | null {
   }
   return null
 }
+
+export function writeToken(directory: string, value: string): void {
+  const fileName = path.join(directory, "token")
+  fs.writeFileSync(fileName, value, { encoding: "utf-8" })
+}

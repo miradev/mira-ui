@@ -1,20 +1,23 @@
+import type { WebsocketEvent } from "@/ws-event"
+import * as hwid from "@/hwid"
 import * as WebSocket from "ws"
-import type { WebsocketEvent } from "./ws-event"
-import { EventType } from "./ws-event"
-import * as hwid from "./hwid"
+import { writeToken } from "@/config"
+import { EventType } from "@/ws-event"
 
 const deviceId = hwid.mac + "-" + hwid.serial
 
 export default class WebsocketHandler {
   private ws: WebSocket
+  private miraDirectory: string
   private token: string | null
 
-  constructor(ws: WebSocket, token: string | null) {
+  constructor(ws: WebSocket, miraDirectory: string, token: string | null) {
     this.ws = ws
     this.token = token
+    this.miraDirectory = miraDirectory
   }
 
-  public initialize() {
+  public initialize(): void {
     this.ws.on("open", () => {
       // Send token if token exists, else send device hwid for registration
       if (this.token !== null) {
@@ -34,7 +37,7 @@ export default class WebsocketHandler {
     })
   }
 
-  private send(eventType: EventType, data: any) {
+  private send(eventType: EventType, data: any): void {
     const event: WebsocketEvent = {
       type: eventType,
       data: data
@@ -42,7 +45,7 @@ export default class WebsocketHandler {
     this.ws.send(JSON.stringify(event))
   }
 
-  private handleMessage(type: EventType, data: any) {
+  private handleMessage(type: EventType, data: any): void {
     switch (type) {
       case EventType.REGISTER:
         return this.handleRegisterEvent(data)
@@ -53,9 +56,18 @@ export default class WebsocketHandler {
     }
   }
 
-  private handleRegisterEvent(data: any) {}
+  private handleRegisterEvent(data: any): void {
+    // Save token to file system
+    writeToken(this.miraDirectory, data as string)
+  }
 
-  private handleAuthEvent(data: any) {}
+  private handleAuthEvent(data: any): void {
+    // TODO
+    return
+  }
 
-  private handleUpdateEvent(data: any) {}
+  private handleUpdateEvent(data: any): void {
+    // TODO
+    return
+  }
 }

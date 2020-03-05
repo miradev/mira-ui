@@ -1,7 +1,7 @@
-import { ManifestJSON } from "./manifest"
-import { WidgetSettingsJSON } from "./widget-settings"
+import type { ManifestJSON } from "./manifest"
+import type { WidgetSettingsJSON } from "./widget-settings"
+import type { Config } from "./config"
 import { IpcRenderer } from "electron"
-import { Config } from "./config"
 
 declare global {
   interface Document {

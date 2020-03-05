@@ -4,9 +4,7 @@ export enum EventType {
   UPDATE,
 }
 
-interface WebsocketEvent {
+export interface WebsocketEvent {
   type: EventType
   data: any
 }
-
-export type { WebsocketEvent }

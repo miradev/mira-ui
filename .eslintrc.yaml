@@ -5,7 +5,7 @@ env:
 extends:
   - "plugin:@typescript-eslint/recommended"
 plugins:
-  - @typescript-eslint
+  - "@typescript-eslint"
   - prettier
   - prettier/@typescript-eslint
 globals:

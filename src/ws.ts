@@ -38,6 +38,7 @@ export default class WebsocketHandler {
     })
 
     this.ws.on("message", (data: string) => {
+      console.log("Received message: ", data)
       try {
         const event: WebsocketEvent = JSON.parse(data)
         this.handleMessage(event.type, event.data)
@@ -52,7 +53,9 @@ export default class WebsocketHandler {
       type: eventType,
       data: data
     }
-    this.ws.send(JSON.stringify(event))
+    const strEvent = JSON.stringify(event)
+    console.log("Sending message: ", strEvent)
+    this.ws.send(strEvent)
   }
 
   private handleMessage(type: EventType, data: any): void {

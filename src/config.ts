@@ -2,11 +2,13 @@ import * as path from "path"
 import * as fs from "fs"
 
 export interface ServerConfig {
+  protocol: string
   serverUrl: string
   serverPort: string
 }
 
 const defaultConfig: ServerConfig = {
+  protocol: "http",
   serverUrl: "192.168.0.35",
   serverPort: "8000",
 }

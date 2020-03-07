@@ -1,7 +1,7 @@
 import type { WebsocketEvent } from "./ws-event"
 import * as hwid from "./hwid"
 import * as WebSocket from "ws"
-import { writeToken, ServerConfig, removeTokenIfExists } from "./config"
+import { writeToken, ServerConfig, removeTokenIfExists, UpdateData } from "./config"
 import { EventType } from "./ws-event"
 
 const deviceId = hwid.mac + "-" + hwid.serial
@@ -76,7 +76,7 @@ export default class WebsocketHandler {
       case EventType.AUTH:
         return this.handleAuthEvent(data)
       case EventType.UPDATE:
-        return this.handleUpdateEvent(data)
+        return this.handleUpdateEvent(data as UpdateData)
     }
   }
 
@@ -87,12 +87,14 @@ export default class WebsocketHandler {
   }
 
   private handleAuthEvent(data: any): void {
-    // TODO
-    return
+    // Logged in
+    console.log("Successfully logged in using token.")
   }
 
-  private handleUpdateEvent(data: any): void {
-    // TODO
-    return
+  private handleUpdateEvent(data: UpdateData): void {
+    for (let [key, value] of Object.entries(data)) {
+      console.log(key)
+      console.log(value)
+    }
   }
 }

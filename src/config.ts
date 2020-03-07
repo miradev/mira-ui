@@ -15,6 +15,13 @@ const defaultConfig: ServerConfig = {
   serverPort: "8000",
 }
 
+export interface UpdateData {
+  [widgetId: string]: {
+    fileName: string
+    config: object
+  }
+}
+
 export function readConfig(directory: string): ServerConfig {
   const fileName = path.join(directory, "config.json")
   if (fs.existsSync(fileName)) {

@@ -16,7 +16,7 @@ const defaultConfig: ServerConfig = {
 }
 
 export interface UpdateData {
-  id: string
+  widgetId: string
   fileName: string
   config: object
 }

@@ -29,7 +29,7 @@ export default class WebsocketHandler {
     return new WebSocket(`ws://${this.serverConfig.serverUrl}:${this.serverConfig.serverPort}`)
   }
 
-  public initialize(callbacks: WSEventCallback): void {
+  public initialize(callbacks: WSEventCallback = {}): void {
     this.callbacks = callbacks
     this.ws = this.newWebSocketConnection()
 
@@ -101,7 +101,7 @@ export default class WebsocketHandler {
 
   private handleUpdateEvent(data: UpdateData[]): void {
     const downloads = data.map(widget => {
-      api.downloadWidget({
+      return api.downloadWidget({
         miraDirectory: this.miraDirectory,
         serverUrl: `${this.serverConfig.protocol}://${this.serverConfig.serverUrl}:${this.serverConfig.serverPort}`,
         widgetId: widget.widgetId,

@@ -1,7 +1,7 @@
 import { app, BrowserWindow, globalShortcut, ipcMain } from "electron"
 import * as path from "path"
 import WebsocketHandler from "./ws"
-import { readConfig, readToken, ServerConfig } from "./config"
+import { readConfig, readToken, checkWidgetsFolder, ServerConfig } from "./config"
 import { setInterval } from "timers"
 
 app.allowRendererProcessReuse = true
@@ -17,6 +17,9 @@ let wsh: WebsocketHandler | null = null
 function tokenExists(): boolean {
   return readToken(miraDirectory) !== null
 }
+
+// Initialize
+checkWidgetsFolder(miraDirectory)
 
 function createWindow(): void {
   const token: string | null = readToken(miraDirectory)
@@ -61,6 +64,12 @@ function createWindow(): void {
       app.relaunch()
       app.quit()
     },
+    update: () => {
+      // setTimeout(() => {
+        app.relaunch()
+        app.quit()
+      // }, 500)
+    },
   })
 }
 
@@ -79,14 +88,7 @@ function createSetupWindow(): void {
   win.loadFile(path.join(app.getAppPath(), "renderer", "setup", "index.html"))
   win.setMenuBarVisibility(false)
 
-  wsh.initialize({
-    update: () => {
-      setTimeout(() => {
-        app.relaunch()
-        app.quit()
-      }, 500)
-    },
-  })
+  wsh.initialize()
 
   let timer = setInterval(() => {
     if (tokenExists()) {

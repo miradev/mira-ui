@@ -9,7 +9,7 @@ export interface DownloadOptions {
   serverUrl: string
 }
 
-export function downloadWidget(options: DownloadOptions): Promise<any> {
+export function downloadWidget(options: DownloadOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     const outputName = `${options.widgetId}.zip`
     const outputPath = path.join(options.miraDirectory, "widgets", outputName)
@@ -22,6 +22,8 @@ export function downloadWidget(options: DownloadOptions): Promise<any> {
       }
       res.pipe(file)
     })
-    file.on("finish", resolve)
+    file.on("finish", () => {
+      resolve()
+    })
   })
 }

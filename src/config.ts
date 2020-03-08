@@ -2,6 +2,7 @@ import * as path from "path"
 import * as fs from "fs"
 
 const TOKEN_FILENAME = "token"
+const WIDGETS_FOLDER = "widgets"
 
 export interface ServerConfig {
   protocol: string
@@ -53,5 +54,12 @@ export function removeTokenIfExists(directory: string): void {
   const fileName = path.join(directory, TOKEN_FILENAME)
   if (fs.existsSync(fileName)) {
     fs.unlinkSync(fileName)
+  }
+}
+
+export function checkWidgetsFolder(directory: string): void {
+  const widgetsFolder = path.join(directory, WIDGETS_FOLDER)
+  if (!fs.existsSync(widgetsFolder)) {
+    fs.mkdirSync(widgetsFolder)
   }
 }

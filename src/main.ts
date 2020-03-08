@@ -55,10 +55,12 @@ function createWindow(): void {
     console.log(event, args)
   })
 
-  wsh.initialize(() => {
-    // On websocket "invalidated" close, restart app without token file
-    app.relaunch()
-    app.quit()
+  wsh.initialize({
+    invalidToken: () => {
+      // On websocket "invalidated" close, restart app without token file
+      app.relaunch()
+      app.quit()
+    },
   })
 }
 
@@ -77,7 +79,14 @@ function createSetupWindow(): void {
   win.loadFile(path.join(app.getAppPath(), "renderer", "setup", "index.html"))
   win.setMenuBarVisibility(false)
 
-  wsh.initialize()
+  wsh.initialize({
+    update: () => {
+      setTimeout(() => {
+        app.relaunch()
+        app.quit()
+      }, 500)
+    },
+  })
 
   let timer = setInterval(() => {
     if (tokenExists()) {

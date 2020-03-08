@@ -3,14 +3,21 @@ import * as hwid from "./hwid"
 import * as WebSocket from "ws"
 import { writeToken, ServerConfig, removeTokenIfExists, UpdateData } from "./config"
 import { EventType } from "./ws-event"
+import * as api from "./api"
 
 const deviceId = hwid.mac + "-" + hwid.serial
+
+export interface WSEventCallback {
+  invalidToken?: () => void
+  update?: () => void
+}
 
 export default class WebsocketHandler {
   private serverConfig: ServerConfig
   private ws!: WebSocket
   private miraDirectory: string
   private token: string | null
+  private callbacks!: WSEventCallback
 
   constructor(serverConfig: ServerConfig, miraDirectory: string, token: string | null) {
     this.serverConfig = serverConfig
@@ -22,7 +29,8 @@ export default class WebsocketHandler {
     return new WebSocket(`ws://${this.serverConfig.serverUrl}:${this.serverConfig.serverPort}`)
   }
 
-  public initialize(closeFunc: (() => void) | undefined = undefined): void {
+  public initialize(callbacks: WSEventCallback): void {
+    this.callbacks = callbacks
     this.ws = this.newWebSocketConnection()
 
     this.ws.on("error", (err: Error) => {
@@ -33,8 +41,8 @@ export default class WebsocketHandler {
       if (code === 1008) {
         // Delete token file if exists
         removeTokenIfExists(this.miraDirectory)
-        if (closeFunc) {
-          closeFunc()
+        if (this.callbacks.invalidToken) {
+          this.callbacks.invalidToken()
         }
       }
     })
@@ -92,8 +100,21 @@ export default class WebsocketHandler {
   }
 
   private handleUpdateEvent(data: UpdateData[]): void {
-    for (const widget of data) {
-      console.log(widget)
-    }
+    const downloads = data.map(widget => {
+      api.downloadWidget({
+        miraDirectory: this.miraDirectory,
+        serverUrl: `${this.serverConfig.protocol}://${this.serverConfig.serverUrl}:${this.serverConfig.serverPort}`,
+        widgetId: widget.widgetId,
+        fileName: widget.fileName
+      })
+    })
+    Promise.all(downloads).then(() => {
+      console.log("All downloads finished!")
+      if (this.callbacks.update) {
+        this.callbacks.update()
+      }
+    }).catch(err => {
+      console.log("Something bad happened.", err)
+    })
   }
 }

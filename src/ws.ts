@@ -76,7 +76,7 @@ export default class WebsocketHandler {
       case EventType.AUTH:
         return this.handleAuthEvent(data)
       case EventType.UPDATE:
-        return this.handleUpdateEvent(data as UpdateData)
+        return this.handleUpdateEvent(data as UpdateData[])
     }
   }
 
@@ -91,10 +91,9 @@ export default class WebsocketHandler {
     console.log("Successfully logged in using token.")
   }
 
-  private handleUpdateEvent(data: UpdateData): void {
-    for (let [key, value] of Object.entries(data)) {
-      console.log(key)
-      console.log(value)
+  private handleUpdateEvent(data: UpdateData[]): void {
+    for (const widget of data) {
+      console.log(widget)
     }
   }
 }

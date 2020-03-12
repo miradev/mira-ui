@@ -27,7 +27,11 @@ gulp.task("copy-html", () => {
 
 gulp.task("copy-runtime-scripts", () => {
   return gulp
-    .src(["src/renderer/vue.runtime.min.js", "src/renderer/axios.min.js"])
+    .src([
+      "src/renderer/vue.runtime.min.js",
+      "src/renderer/axios.min.js",
+      "src/renderer/moment-with-locales.min.js",
+    ])
     .pipe(gulp.dest(DIST_RENDERER))
 })
 

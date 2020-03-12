@@ -5,6 +5,7 @@ html {
   font-size: 40px;
   margin: 0 0;
   padding: 0 0;
+  width: 100%;
   cursor: none;
 }
 
@@ -24,7 +25,7 @@ body > div {
 }
 
 body > div.page {
-  transition: opacity 0.25s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 p, h1, h2, h3, h4, h5, h6 {

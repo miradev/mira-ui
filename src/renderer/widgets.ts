@@ -107,6 +107,9 @@ const wm: WidgetManager = {
 
       const settings: WidgetSetting | null = this.loadSetting(id)
       if (settings) {
+        if (widgetInstance.vue) {
+          widgetInstance.vue.$emit("config", settings.config)
+        }
         console.log(`Loading widget settings for widget ${widgetInstance.manifest.name}`, settings)
         const el = document.getElementById(id)!
         if (settings.style) {

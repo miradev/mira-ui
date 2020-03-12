@@ -3,6 +3,7 @@ import * as path from "path"
 import WebsocketHandler from "./ws"
 import { readConfig, readToken, checkWidgetsFolder, ServerConfig } from "./config"
 import { setInterval } from "timers"
+import * as express from "express"
 
 app.allowRendererProcessReuse = true
 
@@ -21,7 +22,36 @@ function tokenExists(): boolean {
 // Initialize
 checkWidgetsFolder(miraDirectory)
 
-function createWindow(): void {
+function localServer(window: Electron.BrowserWindow) {
+  const expressApp = express()
+  expressApp.use(express.json())
+
+  const listenPort = 3000
+
+  expressApp.post("/motion", (req, res) => {
+    const direction = req.body.direction
+    switch (direction) {
+      case "up":
+        break
+      case "down":
+        break
+      case "left":
+        window.webContents.send("!left", true)
+        break
+      case "right":
+        window.webContents.send("!right", true)
+        break
+    }
+    res.status(200)
+    res.send()
+  })
+
+  expressApp.listen(listenPort, () => {
+    console.log(`Listening on port ${listenPort}`)
+  })
+}
+
+function createMainWindow(): void {
   const token: string | null = readToken(miraDirectory)
   wsh = new WebsocketHandler(config, miraDirectory, token)
 
@@ -74,11 +104,13 @@ function createWindow(): void {
     },
     update: () => {
       // setTimeout(() => {
-        app.relaunch()
-        app.quit()
+      app.relaunch()
+      app.quit()
       // }, 500)
     },
   })
+
+  localServer(win)
 }
 
 function createSetupWindow(): void {
@@ -111,7 +143,7 @@ app.on("ready", () => {
   if (!tokenExists()) {
     createSetupWindow()
   } else {
-    createWindow()
+    createMainWindow()
   }
 })
 
@@ -122,7 +154,7 @@ app.on("activate", () => {
     if (!tokenExists()) {
       createSetupWindow()
     } else {
-      createWindow()
+      createMainWindow()
     }
   }
 })

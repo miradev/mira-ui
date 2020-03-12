@@ -5,7 +5,8 @@ import { IpcRenderer } from "electron"
 
 declare global {
   interface Document {
-    createRootDiv(id: string): HTMLDivElement
+    createPageDiv(pageNum: number): HTMLDivElement
+    createDivForPage(divId: string, pageEl: HTMLDivElement): HTMLDivElement
   }
   interface Window {
     srcDir: string

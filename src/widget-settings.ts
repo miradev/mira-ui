@@ -1,12 +1,17 @@
 export interface WidgetSettingsJSON {
-  widgets: WidgetSettings
+  pages: PageSettingJSON[]
+  widgets: {
+    [id: string]: WidgetSetting
+  }
 }
 
-export interface WidgetSettings {
-  [key: string]: WidgetSetting
+export interface PageSettingJSON {
+  ids: string[]
 }
 
 export interface WidgetSetting {
-  x: number
-  y: number
+  style?: {
+    [key: string]: string
+  }
+  config?: object
 }

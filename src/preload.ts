@@ -11,11 +11,17 @@ import * as hwid from "./hwid"
 const WIDGET_SETTINGS = "widget_settings.json"
 const MANIFEST = "manifest.json"
 
-document.createRootDiv = (id: string): HTMLDivElement => {
-  const root = document.createElement("div")
-  root.id = id
-  document.body.appendChild(root)
-  return root
+document.createPageDiv = (pageNum: number): HTMLDivElement => {
+  const page = document.createElement("div")
+  page.id = `page${pageNum}`
+  return page
+}
+
+document.createDivForPage = (divId: string, pageEl: HTMLDivElement): HTMLDivElement => {
+  const div = document.createElement("div")
+  div.id = divId
+  pageEl.appendChild(div)
+  return div
 }
 
 window.pathJoin = path.join

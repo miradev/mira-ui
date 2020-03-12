@@ -1,5 +1,5 @@
-import { ManifestJSON } from "../manifest"
-import { WidgetSettingsJSON, WidgetSetting } from "../widget-settings"
+import type { ManifestJSON } from "../manifest"
+import type { WidgetSettingsJSON, WidgetSetting, PageSettingJSON } from "../widget-settings"
 
 const WIDGET_SETTINGS = "widget_settings.json"
 const MANIFEST = "manifest.json"
@@ -12,12 +12,12 @@ interface WidgetManager {
 }
 
 const wm: WidgetManager = {
-    // tslint:disable: no-empty
-    register(widgetInstance: any) {},
-  }
+  // tslint:disable: no-empty
+  register(widgetInstance: any) {},
+}
 
-  // Private anonymous function that constructs a widget manager local to this script file,
-  // which then has the public methods exposed through the "wm" global variable
+// Private anonymous function that constructs a widget manager local to this script file,
+// which then has the public methods exposed through the "wm" global variable
 ;(() => {
   const win = window as Window
 
@@ -42,19 +42,26 @@ const wm: WidgetManager = {
     private readonly widgets: Map<string, any> = new Map<string, any>()
     private readonly manifests: Map<string, ManifestJSON> = new Map<string, ManifestJSON>()
 
+    // Mapping of widget id to page number, read from settings
+    private readonly pageMapping: Map<string, number> = new Map<string, number>()
+    private readonly pageSize: number
+    private readonly pages: HTMLDivElement[] = []
+
     constructor(widgetSettings: WidgetSettingsJSON | null) {
       this.settings = widgetSettings
+      this.pageSize = widgetSettings?.pages.length ?? 1
+      this.setupPages()
     }
 
     public load(manifest: ManifestJSON) {
       this.manifests.set(manifest.id, manifest)
 
-      // Register script
+      // Register widget script
       const script = document.createElement("script")
       script.src = `../widgets/${manifest.id}/${manifest.entrypoint.js}`
       document.getElementsByTagName("head")[0].appendChild(script)
 
-      // Register css
+      // Register css styling
       if (manifest.entrypoint.css) {
         const styleLink = document.createElement("link")
         styleLink.type = "text/css"
@@ -67,7 +74,8 @@ const wm: WidgetManager = {
     public register(widgetInstance: any) {
       // Construct a div wrapper for the given widget instance
       const id = widgetInstance.id
-      const div = document.createRootDiv(id)
+      const pageEl = this.pages[this.pageMapping.get(id) ?? 0]
+      const div = document.createDivForPage(id, pageEl)
 
       // [Delegated widget constructor] initialize some readonly local variables for widget instance
       // e.g. div wrapper for the given widget instance, and its corresponding manifest file
@@ -96,12 +104,14 @@ const wm: WidgetManager = {
 
       console.log(`Widget ${widgetInstance.manifest.name} loaded.`)
 
-      const settings = this.loadSetting(id)
+      const settings: WidgetSetting | null = this.loadSetting(id)
       if (settings) {
-        console.log(`Loading custom widget settings for widget ${widgetInstance.manifest.name}`)
+        console.log(`Loading widget settings for widget ${widgetInstance.manifest.name}`)
         const el = document.getElementById(id)!
-        el.style.top = settings.y.toString() + "px"
-        el.style.left = settings.x.toString() + "px"
+        if (settings.style) {
+          console.log(`Loading custom styling for widget ${widgetInstance.manifest.name}`)
+          Object.assign(el.style, settings.style)
+        }
       }
     }
 
@@ -112,14 +122,40 @@ const wm: WidgetManager = {
       }
       return null
     }
+
+    private setupPages() {
+      // Create the pages
+      for (let i = 0; i < this.pageSize; i++) {
+        const page = document.createPageDiv(i)
+        this.pages.push(page)
+      }
+      console.log("Setting up pages")
+      // Setup widget->page mapping for each widget
+      if (this.settings) {
+        for (let i = 0; i < this.pageSize; i++) {
+          const pageSetting = this.settings.pages[i]
+          for (const widgetId of pageSetting.ids) {
+            this.pageMapping.set(widgetId, i)
+          }
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        for (const page of this.pages) {
+          document.body.appendChild(page)
+        }
+      })
+    }
   }
 
   const widgetSettings = win.readWidgetSettings(win.pathJoin(win.widgetDir, WIDGET_SETTINGS))
   const widgetManager = new BaseWidgetManager(widgetSettings)
-  // expose public widget manager methods to the global "wm" object
-  wm.register = widgetManager.register.bind(widgetManager)
 
-  // load widgets based on each manifest.json in the application's widget directory
+  // Expose public widget manager methods to the global "wm" object
+  wm.register = widgetManager.register.bind(widgetManager)
+  Object.freeze(wm)
+
+  // Load widgets based on each manifest.json in the application's widget directory
   const widgetFolders = win.readFolders(win.widgetDir) as string[]
   widgetFolders
     .map(folderName => win.pathJoin(win.widgetDir, folderName) as string)
@@ -127,4 +163,13 @@ const wm: WidgetManager = {
       const manifest = win.readManifest(win.pathJoin(folder, MANIFEST))
       widgetManager.load(manifest)
     })
+
+  // Configure widgets in pages
+  win.ipcRenderer.on("!left", () => {
+    console.log("LEFT")
+  })
+
+  win.ipcRenderer.on("!right", () => {
+    console.log("RIGHT")
+  })
 })()

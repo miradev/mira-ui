@@ -47,6 +47,14 @@ function createWindow(): void {
     app.quit()
   })
 
+  globalShortcut.register("Left", () => {
+    win?.webContents.send("!left", true)
+  })
+
+  globalShortcut.register("Right", () => {
+    win?.webContents.send("!right", true)
+  })
+
   win.loadFile(path.join(app.getAppPath(), "renderer", "index.html"))
   win.setMenuBarVisibility(false)
   win.on("closed", () => {

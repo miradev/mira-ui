@@ -14,6 +14,7 @@ const MANIFEST = "manifest.json"
 document.createPageDiv = (pageNum: number): HTMLDivElement => {
   const page = document.createElement("div")
   page.id = `page${pageNum}`
+  page.style.display = "none"
   return page
 }
 

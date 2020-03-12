@@ -46,6 +46,7 @@ const wm: WidgetManager = {
     private readonly pageMapping: Map<string, number> = new Map<string, number>()
     private readonly pageSize: number
     private readonly pages: HTMLDivElement[] = []
+    private activePageNumber: number = 0
 
     constructor(widgetSettings: WidgetSettingsJSON | null) {
       this.settings = widgetSettings
@@ -159,6 +160,23 @@ const wm: WidgetManager = {
           document.body.appendChild(page)
         }
       })
+      // Set active page to the first page
+      this.switchActivePage(0)
+    }
+
+    public switchActivePage(delta: number) {
+      const pageNum = this.activePageNumber + delta
+      if (pageNum < 0 || pageNum >= this.pageSize) {
+        return
+      }
+
+      // Hide old active page
+      this.pages[this.activePageNumber].style.display = "none"
+      // Show current active page
+      this.activePageNumber = pageNum
+      this.pages[this.activePageNumber].style.display = "initial"
+
+      console.log(`Switched to page ${this.activePageNumber}`)
     }
   }
 
@@ -180,10 +198,10 @@ const wm: WidgetManager = {
 
   // Configure widgets in pages
   win.ipcRenderer.on("!left", () => {
-    console.log("LEFT")
+    widgetManager.switchActivePage(-1)
   })
 
   win.ipcRenderer.on("!right", () => {
-    console.log("RIGHT")
+    widgetManager.switchActivePage(1)
   })
 })()

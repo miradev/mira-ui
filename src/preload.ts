@@ -49,7 +49,12 @@ window.readWidgetSettings = (widgetSettingsFile: string): WidgetSettingsJSON | n
     return null
   }
   const file = fs.readFileSync(widgetSettingsFile, { encoding: "utf8" })
-  return JSON.parse(file)
+  try {
+    return JSON.parse(file)
+  } catch (err) {
+    console.log("Failed to parse the widget_settings.json file.", err)
+    return null
+  }
 }
 
 /**

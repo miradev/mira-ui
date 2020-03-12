@@ -171,10 +171,10 @@ const wm: WidgetManager = {
       }
 
       // Hide old active page
-      this.pages[this.activePageNumber].style.display = "none"
+      this.pages[this.activePageNumber].style.opacity = "0"
       // Show current active page
       this.activePageNumber = pageNum
-      this.pages[this.activePageNumber].style.display = "initial"
+      this.pages[this.activePageNumber].style.opacity = "1"
 
       console.log(`Switched to page ${this.activePageNumber}`)
     }

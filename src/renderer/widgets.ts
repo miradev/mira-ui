@@ -49,7 +49,7 @@ const wm: WidgetManager = {
 
     constructor(widgetSettings: WidgetSettingsJSON | null) {
       this.settings = widgetSettings
-      this.pageSize = widgetSettings?.pages.length ?? 1
+      this.pageSize = widgetSettings?.pages?.length ?? 1
       this.setupPages()
     }
 
@@ -115,23 +115,36 @@ const wm: WidgetManager = {
       }
     }
 
+    /**
+     * Loads the specific settings for a widget, given the widget's ID string originally defined from its manifest
+     * If no setting is found for this widget ID, returns an "empty setting" defined by null.
+     * 
+     * @param widgetId id of the widget
+     */
     private loadSetting(widgetId: string): WidgetSetting | null {
-      if (this.settings && this.settings.widgets[widgetId]) {
+      if (this.settings && this.settings.widgets && this.settings.widgets[widgetId]) {
         const widgetSetting: WidgetSetting = this.settings.widgets[widgetId]
         return widgetSetting
       }
       return null
     }
 
+    /**
+     * Creates an array of div elements, each representing a "page",
+     * then sets up the page mapping for each widget loaded (which widget goes on which page),
+     * and adds all the page div elements to document.body when the DOM is ready.
+     * 
+     * By default, if the widget settings JSON file is not available, there will only be a single
+     * page (div element with id #page0).
+     */
     private setupPages() {
       // Create the pages
       for (let i = 0; i < this.pageSize; i++) {
         const page = document.createPageDiv(i)
         this.pages.push(page)
       }
-      console.log("Setting up pages")
       // Setup widget->page mapping for each widget
-      if (this.settings) {
+      if (this.settings && this.settings.pages) {
         for (let i = 0; i < this.pageSize; i++) {
           const pageSetting = this.settings.pages[i]
           for (const widgetId of pageSetting.ids) {
@@ -139,7 +152,8 @@ const wm: WidgetManager = {
           }
         }
       }
-
+      console.log(`Setting up ${this.pageSize} pages`)
+      // Append all the page div elements to the document body when DOM is ready
       window.addEventListener("DOMContentLoaded", () => {
         for (const page of this.pages) {
           document.body.appendChild(page)

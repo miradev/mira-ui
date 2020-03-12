@@ -1,6 +1,6 @@
 export interface WidgetSettingsJSON {
-  pages: PageSettingJSON[]
-  widgets: {
+  pages?: PageSettingJSON[]
+  widgets?: {
     [id: string]: WidgetSetting
   }
 }

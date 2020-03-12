@@ -168,9 +168,12 @@ const wm: WidgetManager = {
     }
 
     public switchActivePage(delta: number) {
-      const pageNum = this.activePageNumber + delta
-      if (pageNum < 0 || pageNum >= this.pageSize) {
-        return
+      let pageNum = this.activePageNumber + delta
+      // Wrap around
+      if (pageNum < 0) {
+        pageNum = this.pageSize - 1
+      } else if (pageNum >= this.pageSize) {
+        pageNum = 0
       }
 
       // Hide old active page

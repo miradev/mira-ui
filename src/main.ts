@@ -30,7 +30,6 @@ function localServer(window: Electron.BrowserWindow) {
 
   expressApp.post("/motion", (req, res) => {
     const direction = req.body.direction
-    console.log(direction)
     switch (direction) {
       case "up":
         window.webContents.send("!left", true)

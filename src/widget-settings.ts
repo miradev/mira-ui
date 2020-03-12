@@ -13,5 +13,7 @@ export interface WidgetSetting {
   style?: {
     [key: string]: string
   }
-  config?: object
+  config?: {
+    [configKey: string]: string | number | boolean | null
+  }
 }

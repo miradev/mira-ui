@@ -107,10 +107,10 @@ const wm: WidgetManager = {
 
       const settings: WidgetSetting | null = this.loadSetting(id)
       if (settings) {
-        console.log(`Loading widget settings for widget ${widgetInstance.manifest.name}`)
+        console.log(`Loading widget settings for widget ${widgetInstance.manifest.name}`, settings)
         const el = document.getElementById(id)!
         if (settings.style) {
-          console.log(`Loading custom styling for widget ${widgetInstance.manifest.name}`)
+          console.log(`Loading custom styling for widget ${widgetInstance.manifest.name}`, settings.style)
           Object.assign(el.style, settings.style)
         }
       }

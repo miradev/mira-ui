@@ -1,5 +1,6 @@
 import * as path from "path"
 import * as fs from "fs"
+import { WidgetSettingWithPages, WidgetSettingsJSON } from './widget-settings'
 
 const TOKEN_FILENAME = "token"
 const WIDGETS_FOLDER = "widgets"
@@ -17,9 +18,10 @@ const defaultConfig: ServerConfig = {
 }
 
 export interface UpdateData {
-  widgetId: string
-  fileName: string
-  config: object
+  widgets: {
+    [id: string]: WidgetSettingWithPages
+  }
+  fileNames: string[]
 }
 
 export function readConfig(directory: string): ServerConfig {
@@ -32,6 +34,11 @@ export function readConfig(directory: string): ServerConfig {
     }
   }
   return defaultConfig
+}
+
+export function writeWidgetSettings(directory: string, widgetSettings: WidgetSettingsJSON) {
+  const fileName = path.join(directory, "widget_settings.json")
+  fs.writeFileSync(fileName, JSON.stringify(widgetSettings), { encoding: "utf-8" })
 }
 
 export function readToken(directory: string): string | null {

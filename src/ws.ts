@@ -1,9 +1,10 @@
 import type { WebsocketEvent } from "./ws-event"
 import * as hwid from "./hwid"
 import * as WebSocket from "ws"
-import { writeToken, ServerConfig, removeTokenIfExists, UpdateData } from "./config"
+import { writeToken, ServerConfig, removeTokenIfExists, UpdateData, writeWidgetSettings } from "./config"
 import { EventType } from "./ws-event"
 import * as api from "./api"
+import { createWidgetSettings } from "./widget-settings"
 
 const deviceId = hwid.mac + "-" + hwid.serial
 
@@ -84,7 +85,7 @@ export default class WebsocketHandler {
       case EventType.AUTH:
         return this.handleAuthEvent(data)
       case EventType.UPDATE:
-        return this.handleUpdateEvent(data as UpdateData[])
+        return this.handleUpdateEvent(data as UpdateData)
     }
   }
 
@@ -99,17 +100,20 @@ export default class WebsocketHandler {
     console.log("Successfully logged in using token.")
   }
 
-  private handleUpdateEvent(data: UpdateData[]): void {
-    const downloads = data.map(widget => {
+  private handleUpdateEvent(data: UpdateData): void {
+    const downloads = data.fileNames.map(fileName => {
       return api.downloadWidget({
         miraDirectory: this.miraDirectory,
         serverUrl: `${this.serverConfig.protocol}://${this.serverConfig.serverUrl}:${this.serverConfig.serverPort}`,
-        widgetId: widget.widgetId,
-        fileName: widget.fileName
+        widgetId: fileName,
+        fileName: fileName
       })
     })
     Promise.all(downloads).then(() => {
       console.log("All downloads finished!")
+      // Write output config
+      const widgetSettings = createWidgetSettings(data.widgets)
+      writeWidgetSettings(this.miraDirectory, widgetSettings)
       if (this.callbacks.update) {
         this.callbacks.update()
       }

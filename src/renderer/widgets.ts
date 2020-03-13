@@ -26,13 +26,17 @@ const wm: WidgetManager = {
     document.body.style.opacity = "0"
   }
 
-  function wakeView() {
-    document.body.style.opacity = "1"
-  }
-
   let sleep = setTimeout(() => {
     sleepView()
   }, SLEEP_DURATION)
+
+  function wakeView() {
+    document.body.style.opacity = "1"
+    clearTimeout(sleep)
+    sleep = setTimeout(() => {
+      sleepView()
+    }, SLEEP_DURATION)
+  }
 
   function isAsleep() {
     return document.body.style.opacity == "0"
@@ -216,11 +220,8 @@ const wm: WidgetManager = {
     if (isAsleep()) {
       wakeView()
     } else {
-      clearTimeout(sleep)
       widgetManager.switchActivePage(-1)
-      sleep = setTimeout(() => {
-        sleepView()
-      }, SLEEP_DURATION)
+      wakeView()
     }
   })
 
@@ -228,22 +229,12 @@ const wm: WidgetManager = {
     if (isAsleep()) {
       wakeView()
     } else {
-      clearTimeout(sleep)
       widgetManager.switchActivePage(1)
-      sleep = setTimeout(() => {
-        sleepView()
-      }, SLEEP_DURATION)
+      wakeView()
     }
   })
 
   win.ipcRenderer.on("wake", () => {
-    if (isAsleep()) {
-      wakeView()
-    } else {
-      clearTimeout(sleep)
-      sleep = setTimeout(() => {
-        sleepView()
-      }, SLEEP_DURATION)
-    }
+    wakeView()
   })
 })()

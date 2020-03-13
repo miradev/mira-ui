@@ -3,6 +3,7 @@ import type { WidgetSettingsJSON, WidgetSetting, PageSettingJSON } from "../widg
 
 const WIDGET_SETTINGS = "widget_settings.json"
 const MANIFEST = "manifest.json"
+const SLEEP_DURATION = 60 * 1000
 
 /**
  * Publically exposed widget manager API, accessed by custom widgets through the "wm" global variable
@@ -31,7 +32,7 @@ const wm: WidgetManager = {
 
   let sleep = setTimeout(() => {
     sleepView()
-  }, 5000)
+  }, SLEEP_DURATION)
 
   function isAsleep() {
     return document.body.style.opacity == "0"
@@ -219,7 +220,7 @@ const wm: WidgetManager = {
       widgetManager.switchActivePage(-1)
       sleep = setTimeout(() => {
         sleepView()
-      }, 5000)
+      }, SLEEP_DURATION)
     }
   })
 
@@ -231,7 +232,7 @@ const wm: WidgetManager = {
       widgetManager.switchActivePage(1)
       sleep = setTimeout(() => {
         sleepView()
-      }, 5000)
+      }, SLEEP_DURATION)
     }
   })
 
@@ -242,7 +243,7 @@ const wm: WidgetManager = {
       clearTimeout(sleep)
       sleep = setTimeout(() => {
         sleepView()
-      }, 5000)
+      }, SLEEP_DURATION)
     }
   })
 })()

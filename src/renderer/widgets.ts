@@ -234,4 +234,15 @@ const wm: WidgetManager = {
       }, 5000)
     }
   })
+
+  win.ipcRenderer.on("wake", () => {
+    if (isAsleep()) {
+      wakeView()
+    } else {
+      clearTimeout(sleep)
+      sleep = setTimeout(() => {
+        sleepView()
+      }, 5000)
+    }
+  })
 })()

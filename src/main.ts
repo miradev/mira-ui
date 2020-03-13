@@ -37,6 +37,9 @@ function localServer(window: Electron.BrowserWindow) {
       case "down":
         window.webContents.send("!right", true)
         break
+      default:
+        window.webContents.send("wake", true)
+        break
     }
     res.status(200)
     res.send()

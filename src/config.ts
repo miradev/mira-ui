@@ -1,6 +1,6 @@
 import * as path from "path"
 import * as fs from "fs"
-import { WidgetSettingWithPages, WidgetSettingsJSON } from './widget-settings'
+import { WidgetSettingWithPages, WidgetSettingsJSON } from "./widget-settings"
 
 const TOKEN_FILENAME = "token"
 const WIDGETS_FOLDER = "widgets"
@@ -9,12 +9,14 @@ export interface ServerConfig {
   protocol: string
   serverUrl: string
   serverPort: string
+  frontendPort: string
 }
 
 const defaultConfig: ServerConfig = {
   protocol: "http",
   serverUrl: "192.168.0.35",
   serverPort: "8000",
+  frontendPort: "8080",
 }
 
 export interface UpdateData {

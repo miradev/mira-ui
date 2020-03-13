@@ -6,7 +6,7 @@
   didSpan.innerText = deviceId
   urlSpan.innerText = url
 
-  const encodedUrl = encodeURI(`${window.serverConfig.protocol}://${url}qr?deviceId=${deviceId}`)
+  const encodedUrl = encodeURI(`${window.serverConfig.protocol}://${url}qr/${deviceId}`)
   // @ts-ignore
   new QRCode(document.getElementById("qrcode"), {
     text: encodedUrl,

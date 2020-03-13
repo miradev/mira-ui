@@ -2,7 +2,7 @@
 body,
 html {
   font-family: "Roboto Mono", sans-serif;
-  font-size: 40px;
+  font-size: 30px;
   margin: 0 0;
   padding: 0 0;
   cursor: none;
@@ -29,8 +29,8 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .setup p {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
   text-align: center;
 }
 

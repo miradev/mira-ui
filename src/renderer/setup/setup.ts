@@ -1,13 +1,14 @@
 ;(() => {
   const deviceId = window.hwid.mac + "-" + window.hwid.serial
-  const did = document.getElementById("did")! as HTMLSpanElement
-  const url = document.getElementById("url")! as HTMLSpanElement
-  did.innerText = deviceId
-  url.innerText = window.serverConfig.serverUrl + "/" + window.serverConfig.serverPort
+  const didSpan = document.getElementById("did")! as HTMLSpanElement
+  const urlSpan = document.getElementById("url")! as HTMLSpanElement
+  const url = `${window.serverConfig.serverUrl}:${window.serverConfig.serverPort}/qr`
+  didSpan.innerText = deviceId
+  urlSpan.innerText = url
 
   // @ts-ignore
   new QRCode(document.getElementById("qrcode"), {
-    text: deviceId,
+    text: encodeURI(`${window.serverConfig.protocol}://${url}/${deviceId}`),
     width: 256,
     height: 256,
     // @ts-ignore
